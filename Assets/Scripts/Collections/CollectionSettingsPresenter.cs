@@ -20,7 +20,18 @@ namespace yourAlias
 
         private void Awake()
         {
-            collectionsManager = new CollectionsManager();
+            this.collectionsManager = new CollectionsManager();
+            InitCollectionsViews();
+        }
+
+        private void InitCollectionsViews()
+        {
+            List<string> initJsonCollectioList = this.collectionsManager.GetInitJsonCollection();
+
+            for (int i = 0; i < initJsonCollectioList.Count; i++)
+            {
+                AddImportedCollection(this.fileConverter.ConvertJsonToCollection(initJsonCollectioList[i]));
+            }
         }
 
         private void OnEnable()
@@ -29,6 +40,7 @@ namespace yourAlias
             this.viewController.OnWordRemoveClick += RemoveWord;
 
             this.fileConverter.OnFileImported += AddImportedCollection;
+            this.fileConverter.OnFileImportedExeption += ShowImportJsonWaring;
         }
 
         private void OnDisable()
@@ -37,6 +49,7 @@ namespace yourAlias
             this.viewController.OnWordRemoveClick -= RemoveWord;
 
             this.fileConverter.OnFileImported -= AddImportedCollection;
+            this.fileConverter.OnFileImportedExeption -= ShowImportJsonWaring;
         }
 
         public void OpenCollectionSettings(string collectionName)
@@ -47,7 +60,6 @@ namespace yourAlias
 
             ShowSetings();
         }
-
         private void ShowSetings()
         {
             //отобразить имя и список слов коллекции
@@ -61,22 +73,6 @@ namespace yourAlias
 
             this.viewController.ShowSettings();
         }
-
-        public void AddWord()
-        {
-            var newWord = viewController.GetInputWord();
-            //добавить в скрол префаб с новым словом
-            viewController.AddWordView(newWord);
-
-            crntCollection.AddWord(newWord);
-
-        }
-
-        public void RemoveWord(string word)
-        {
-            crntCollection.RemoveWord(word);
-        }
-
         public void ReturnToCollectionList()
         {
             crntCollection.Name = viewController.GetInputCollName();
@@ -112,6 +108,24 @@ namespace yourAlias
 
         }
 
+
+
+        public void AddWord()
+        {
+            var newWord = viewController.GetInputWord();
+            //добавить в скрол префаб с новым словом
+            viewController.AddWordView(newWord);
+
+            crntCollection.AddWord(newWord);
+
+        }
+        public void RemoveWord(string word)
+        {
+            crntCollection.RemoveWord(word);
+        }
+
+
+
         public void DeleteCollection()
         {
             //удалить данные
@@ -121,18 +135,15 @@ namespace yourAlias
 
             viewController.ShowCollectionList();
         }
-
         public void ExportCollection()
         {
             crntCollection.Name = viewController.GetInputCollName();
             fileConverter.ExportCollection(crntCollection);
         }
-
         public void SendImportRequest()
         {
             fileConverter.ImportCollection();
         }
-
         private void AddImportedCollection(Collection newCollection)
         {
             if (this.collectionsManager.AddImportedCollection(newCollection, out isNewCollection))
@@ -148,5 +159,26 @@ namespace yourAlias
             }
 
         }
+        private void ShowImportJsonWaring()
+        {
+            this.viewController.ShowWarningImportMessage();
+        }
+
+
+        void OnApplicationQuit()
+        {
+            var collectionsList = collectionsManager.GetCollectionList();
+
+            List<string> jsonCollectionsList = new();
+            for (int i = 0; i < collectionsList.Count; i++)
+            {
+                jsonCollectionsList.Add(this.fileConverter.ConvertCollectionToJson(collectionsList[i]));
+            }
+
+            collectionsManager.SaveJsonCollectionsToPrefs(jsonCollectionsList);
+        }
+
+
+
     }
 }

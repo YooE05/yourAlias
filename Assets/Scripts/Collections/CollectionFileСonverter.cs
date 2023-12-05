@@ -8,10 +8,25 @@ using UnityEngine.EventSystems;
 
 namespace yourAlias
 {
-    public class CollectionFileСonverter: MonoBehaviour, IPointerDownHandler
+    public class CollectionFileСonverter : MonoBehaviour//, IPointerDownHandler
 
     {
         public Action<Collection> OnFileImported;
+        public Action OnFileImportedExeption;
+
+        public Collection ConvertJsonToCollection(string jsonCollection)
+        {
+            CollectionEntity importedCollection;
+            importedCollection = JsonUtility.FromJson<CollectionEntity>(jsonCollection);
+            return new Collection(importedCollection.name, new List<string>(importedCollection.wordList));
+
+        }
+
+        public string ConvertCollectionToJson(Collection collection)
+        {
+            CollectionEntity entity = new CollectionEntity(collection.Name, collection.WordList);
+            return JsonUtility.ToJson(entity);
+        }
 
 
         public void ExportCollection(Collection expCollection)
@@ -31,10 +46,11 @@ namespace yourAlias
             Debug.Log(expJsonCollection);
         }
 
-        public void OnPointerDown(PointerEventData eventData) { }
+
+        //public void OnPointerDown(PointerEventData eventData) { }
         public void ImportCollection()
         {
-           // string testJsonData = "{\"name\":\"CoolCollection\",\"wordList\":[\"d\",\"sds\",\"dss\"]}";
+            // string testJsonData = "{\"name\":\"CoolCollection\",\"wordList\":[\"d\",\"sds\",\"dss\"]}";
 
             var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", true);
             if (paths.Length > 0)
@@ -49,7 +65,6 @@ namespace yourAlias
             }
 
         }
-
         private IEnumerator OutputRoutine(string[] urlArr)
         {
             var outputText = "";
@@ -59,9 +74,21 @@ namespace yourAlias
                 yield return loader;
                 outputText += loader.text;
             }
- 
-            CollectionEntity importedCollection = JsonUtility.FromJson<CollectionEntity>(outputText);
 
+            CollectionEntity importedCollection;
+
+            try
+            {
+                importedCollection = JsonUtility.FromJson<CollectionEntity>(outputText);
+            }
+            catch (Exception)
+            {
+                Debug.Log("jsone incorrect");
+                OnFileImportedExeption?.Invoke();
+                throw;
+            }
+
+            Debug.Log("ddd");
             OnFileImported?.Invoke(new Collection(importedCollection.name, new List<string>(importedCollection.wordList)));
         }
 

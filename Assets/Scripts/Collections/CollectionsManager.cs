@@ -8,38 +8,47 @@ namespace yourAlias
 {
     public class CollectionsManager
     {
-        private List<Collection> addedCollections = new();
+        private List<Collection> collectionList = new();
 
-        //  private Collection crntSetUpCollection;
-
-
-        public void InitCollections()
+        public List<string> GetInitJsonCollection()
         {
-            //сделать проверку на повторение имЄн!!
+            List<string> jsonList = new();
 
             //вз€ть из префсов все коллекции 
-            //настроить листџ коллекций в зависимости от этого
+            int num = PlayerPrefs.GetInt("Collection number");
+
+            for (int i = 0; i < num; i++)
+            {
+                jsonList.Add(PlayerPrefs.GetString(i.ToString()));
+            }
+
+            return jsonList;
+        }
+
+        public List<Collection> GetCollectionList()
+        {
+            return collectionList;
         }
 
         internal Collection GetCollection(string collectionName, out bool isNewCollection)
         {
-            if (addedCollections.Find(c => c.Name == collectionName) != null)
+            if (collectionList.Find(c => c.Name == collectionName) != null)
             {
                 isNewCollection = false;
-                return addedCollections.Find(c => c.Name == collectionName);
+                return collectionList.Find(c => c.Name == collectionName);
             }
             else
             {
                 isNewCollection = true;
-                addedCollections.Add(new Collection(collectionName, new List<string>()));
-                return addedCollections.Find(c => c.Name == collectionName);
+                collectionList.Add(new Collection(collectionName, new List<string>()));
+                return collectionList.Find(c => c.Name == collectionName);
             }
         }
 
         public bool SaveCollection(string oldName, Collection newCollData)
         {
             //сохранить данные о коллекции в префсы и лист
-            if (oldName != newCollData.Name && addedCollections.Find(c => c.Name == newCollData.Name) != null)
+            if (oldName != newCollData.Name && collectionList.Find(c => c.Name == newCollData.Name) != null)
             {
                 return false;
             }
@@ -50,7 +59,7 @@ namespace yourAlias
             else
             {
                 newCollData.Name = newCollData.Name.Trim();
-                addedCollections.Find(c => c.Name == oldName).UpdateCollection(newCollData);
+                collectionList.Find(c => c.Name == oldName).UpdateCollection(newCollData);
                 return true;
             }
 
@@ -77,7 +86,7 @@ namespace yourAlias
 
         internal void RemoveCollection(string name)
         {
-            addedCollections.Remove(addedCollections.Find(c => c.Name == name));
+            collectionList.Remove(collectionList.Find(c => c.Name == name));
         }
 
         internal bool AddImportedCollection(Collection newCollection, out bool isNewCollection)
@@ -87,19 +96,33 @@ namespace yourAlias
                 isNewCollection = false;
                 return false;
             }
-            else if (addedCollections.Find(c => c.Name == newCollection.Name) == null)
+            else if (collectionList.Find(c => c.Name == newCollection.Name) == null)
             {
-                addedCollections.Add(new Collection(newCollection.Name, newCollection.WordList));
+                collectionList.Add(new Collection(newCollection.Name, newCollection.WordList));
                 isNewCollection = true;
                 return true;
             }
             else
             {
                 newCollection.Name = newCollection.Name.Trim();
-                addedCollections.Find(c => c.Name == newCollection.Name).UpdateCollection(newCollection);
+                collectionList.Find(c => c.Name == newCollection.Name).UpdateCollection(newCollection);
                 isNewCollection = false;
                 return true;
             }
+        }
+
+        public void SaveJsonCollectionsToPrefs(List<string> jsonCollectionList)
+        {
+            PlayerPrefs.DeleteAll();
+
+            PlayerPrefs.SetInt("Collection number", collectionList.Count);
+
+            for (int i = 0; i < jsonCollectionList.Count; i++)
+            {
+                PlayerPrefs.SetString(i.ToString(), jsonCollectionList[i]);
+            }
+
+            PlayerPrefs.Save();
         }
     }
 }
