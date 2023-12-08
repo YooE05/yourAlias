@@ -71,6 +71,7 @@ namespace yourAlias
             collGame.GetComponentInChildren<TextMeshProUGUI>().text = crntSetUpCollection.Name;
             collGame.GetComponentInChildren<Button>().onClick.AddListener(() => OnCollectionGameClick?.Invoke(crntSetUpCollection.Name));
         }
+
         public void UpdateViewsName(string oldName)
         {
             var needView = collSetViews.Find(c => c.GetComponentInChildren<TextMeshProUGUI>().text == oldName);
@@ -116,6 +117,38 @@ namespace yourAlias
         }
 
 
+        internal void ResetAllGameToggles()
+        {
+            for (int i = 0; i < this.collGameViews.Count; i++)
+            {
+                this.collGameViews[i].GetComponentInChildren<Toggle>().isOn = false;
+            }
+        }
+        internal void UpdateGameTogglesByConfig(List<string> collections)
+        {
+            for (int i = 0; i < this.collGameViews.Count; i++)
+            {
+                if(collections.Find(c => c == this.collGameViews[i].GetComponentInChildren<TextMeshProUGUI>().text)!=null)
+                {
+                    this.collGameViews[i].GetComponentInChildren<Toggle>().isOn = true;
+                }
+                else
+                {
+                    this.collGameViews[i].GetComponentInChildren<Toggle>().isOn = false;
+                }
+            }
+        }
+        internal bool GetGameCollectionToggle(string collName)
+        {
+            return this.collGameViews.Find(c => c.GetComponentInChildren<TextMeshProUGUI>().text == collName).GetComponentInChildren<Toggle>().isOn;
+        }
+        internal void ToggleGameCollection(string collName)
+        {
+            var toggle = this.collGameViews.Find(c => c.GetComponentInChildren<TextMeshProUGUI>().text == collName).GetComponentInChildren<Toggle>();
+            toggle.isOn = !toggle.isOn;
+        }
+
+
         internal string GetInputWord()
         {
             return this.wordInputField.text;
@@ -124,6 +157,10 @@ namespace yourAlias
         {
             return this.nameInputField.text;
         }
+
+
+
+
 
 
         //warnings

@@ -7,7 +7,6 @@ namespace yourAlias
 {
     public class CollectionSettingsPresenter : MonoBehaviour
     {
-
         [SerializeField]
         private CollectionsView viewController;
         [SerializeField]
@@ -32,6 +31,12 @@ namespace yourAlias
             {
                 AddImportedCollection(this.fileConverter.ConvertJsonToCollection(initJsonCollectioList[i]));
             }
+            this.viewController.ResetAllGameToggles();
+        }
+
+        internal CollectionsManager GetCollectionManager()
+        {
+            return collectionsManager;
         }
 
         private void OnEnable()
@@ -55,7 +60,7 @@ namespace yourAlias
         public void OpenCollectionSettings(string collectionName)
         {
             this.crntCollection = new Collection();
-            this.crntCollection.UpdateCollection(this.collectionsManager.GetCollection(collectionName, out isNewCollection));
+            this.crntCollection.UpdateCollection(this.collectionsManager.GetExistOrNewCollection(collectionName, out isNewCollection));
             oldCollectionName = this.crntCollection.Name;
 
             ShowSetings();

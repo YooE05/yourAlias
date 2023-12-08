@@ -30,7 +30,7 @@ namespace yourAlias
             return collectionList;
         }
 
-        internal Collection GetCollection(string collectionName, out bool isNewCollection)
+        internal Collection GetExistOrNewCollection(string collectionName, out bool isNewCollection)
         {
             if (collectionList.Find(c => c.Name == collectionName) != null)
             {
@@ -44,6 +44,12 @@ namespace yourAlias
                 return collectionList.Find(c => c.Name == collectionName);
             }
         }
+
+        internal Collection GetExisCollection(string collectionName)
+        {
+            return collectionList.Find(c => c.Name == collectionName);
+        }
+
 
         public bool SaveCollection(string oldName, Collection newCollData)
         {
