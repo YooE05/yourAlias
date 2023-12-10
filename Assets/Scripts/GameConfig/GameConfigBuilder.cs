@@ -107,7 +107,11 @@ namespace yourAlias
         }
         public void SrtPenaltyAbility()
         {
-            this.crntConfig.isSkipWordsUnsafe = !this.crntConfig.isSkipWordsUnsafe;
+            if (this.crntConfig != null)
+            {
+                this.crntConfig.isSkipWordsUnsafe = !this.crntConfig.isSkipWordsUnsafe;
+            }
+
         }
 
 

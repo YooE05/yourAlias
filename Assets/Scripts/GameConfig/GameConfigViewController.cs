@@ -61,7 +61,7 @@ namespace yourAlias
             UpdateRoundTimersView(crntConfig.timePerRound);
 
 
-           // this.skippedWordsToggle.isOn = crntConfig.isSkipWordsUnsafe;
+            this.skippedWordsToggle.isOn = crntConfig.isSkipWordsUnsafe;
 
             for (int i = 0; i < crntConfig.teams.Count; i++)
             {

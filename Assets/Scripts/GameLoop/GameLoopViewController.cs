@@ -191,7 +191,9 @@ namespace yourAlias
             var wordGO = Instantiate(this.wordGamePrefab, this.postRoundWordsContet);
             wordGO.GetComponentInChildren<TextMeshProUGUI>().text = w;
             //задать ивент кнопке
-            wordGO.GetComponent<Button>().onClick.AddListener(() => OnPostRoundWordClick?.Invoke(wordGO.GetComponentInChildren<Toggle>()));
+            wordGO.GetComponentInChildren<Button>().onClick.AddListener(() => OnPostRoundWordClick?.Invoke(wordGO.GetComponentInChildren<Toggle>()));
+
+
             this.gameWordsList.Add(wordGO);
         }
 
@@ -211,12 +213,12 @@ namespace yourAlias
             if (toggle.isOn)
             {
                 //decreese points
-                this.addedPointsText.text = "+" + (Convert.ToInt32(this.addedPointsText.text.Substring(1)) - 1);
+                this.addedPointsText.text = "+" + (Mathf.Clamp(Convert.ToInt32(this.addedPointsText.text.Substring(1)) - 1, 0, 100000));
             }
             else
             {
                 //increese points
-                this.addedPointsText.text = "+" + (Convert.ToInt32(this.addedPointsText.text.Substring(1)) + 1);
+                this.addedPointsText.text = "+" + (Mathf.Clamp(Convert.ToInt32(this.addedPointsText.text.Substring(1)) + 1, 0, 100000));
             }
             toggle.isOn = !toggle.isOn;
         }

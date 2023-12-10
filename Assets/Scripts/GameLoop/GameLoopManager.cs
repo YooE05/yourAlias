@@ -131,39 +131,50 @@ namespace yourAlias
             this.gameLoopView.HideWord();
         }
 
+
+        public void AddGuessedWord()
+        {
+            this.gameLoopView.AddGuessedWord();
+            if (isNeedToGuessLastWord)
+            {
+                isNeedToGuessLastWord = false;
+            }
+            else
+            {
+                this.gameLoopView.SetNewWord(GetRandomWord());
+            }
+        }
+
+        public void AddSkippedWord()
+        {
+            if (this.crntGameConfig.isSkipWordsUnsafe)
+            {
+                this.decreasePoints++;
+            }
+            this.gameLoopView.AddSkippedWord();
+
+            if (isNeedToGuessLastWord)
+            {
+                isNeedToGuessLastWord = false;
+            }
+            else
+            {
+                this.gameLoopView.SetNewWord(GetRandomWord());
+            }
+        }
+
+
         private void Update()
         {
             if (isTimerPlays)
             {
-                if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
-                {
-                    this.gameLoopView.AddGuessedWord();
-                    if (isNeedToGuessLastWord)
-                    {
-                        isNeedToGuessLastWord = false;
-                    }
-                    else
-                    {
-                        this.gameLoopView.SetNewWord(GetRandomWord());
-                    }
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                 {
+                    AddGuessedWord();
                 }
-
-                if (Input.GetMouseButtonDown(1) && !EventSystem.current.IsPointerOverGameObject())
+                if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
-                    if (this.crntGameConfig.isSkipWordsUnsafe)
-                    {
-                        this.decreasePoints++;
-                    }
-                    this.gameLoopView.AddSkippedWord();
-
-                    if (isNeedToGuessLastWord)
-                    {
-                        isNeedToGuessLastWord = false;
-                    }
-                    else
-                    {
-                        this.gameLoopView.SetNewWord(GetRandomWord());
-                    }
+                    AddSkippedWord();
                 }
             }
         }
