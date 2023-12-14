@@ -473,8 +473,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Word
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 48ccdcb5990aaee42838a06a3229ea36, type: 2}
+  m_sharedMaterial: {fileID: 1773467108065592403, guid: 48ccdcb5990aaee42838a06a3229ea36, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -534,7 +534,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 7.3345337, y: 0, z: -12.151062, w: -114.56311}
+  m_margin: {x: 7.3345337, y: 0, z: -12.151062, w: -83.67483}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -597,7 +597,7 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 0
+    m_Top: 17
     m_Bottom: 0
   m_ChildAlignment: 0
   m_Spacing: 0
@@ -636,10 +636,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: 79869aad7f9276a4ba0e27cd453df74f, type: 3}
   m_UVRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+    x: 0.02
+    y: 0.05
+    width: 0.96
+    height: 0.9
