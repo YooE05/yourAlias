@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c8e78d17561085a4a916c52e5caff632
+guid: 299d64301098b744a95423ea7d46208d
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Baloo
+  - Baloo Cyrillic
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
