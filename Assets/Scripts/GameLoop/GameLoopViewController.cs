@@ -46,6 +46,9 @@ namespace yourAlias
         private GameObject startButton;
         [SerializeField]
         private GameObject stopButton;
+        [SerializeField]
+        private GameObject wordButton;
+
 
         [SerializeField]
         private TextMeshProUGUI guessedWordsText;
@@ -79,6 +82,11 @@ namespace yourAlias
         private void OnEnable()
         {
             OnPostRoundWordClick += TogglePostRoundWord;
+        }
+
+        internal void ShowWordButton()
+        {
+            this.wordButton.SetActive(true);
         }
 
         internal void HideStartBtn()
@@ -300,7 +308,9 @@ namespace yourAlias
         internal void ShowPlayScreen()
         {
             this.startRoundScreen.SetActive(false);
+
             this.playScreen.SetActive(true);
+            this.wordButton.SetActive(false);
         }
 
         internal void ShowPostRoundScreen(int decPoints)

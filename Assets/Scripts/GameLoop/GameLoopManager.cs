@@ -45,6 +45,7 @@ namespace yourAlias
         }
         public void OnGoToMenuClick()
         {
+            StopAllCoroutines();
             this.gameLoopView.ShowMenuScreen();
             this.configBuilder.RemoveAllTeams();
 
@@ -83,6 +84,7 @@ namespace yourAlias
 
         public void OnStartButton()
         {
+            this.gameLoopView.ShowWordButton();
             this.isTimerPlays = true;
             this.gameLoopView.HideStartBtn();
             this.timerCoroutine = StartCoroutine(PlayRoundLoop(this.passedTimerTime));
@@ -207,6 +209,13 @@ namespace yourAlias
             }
 
 
+        }
+
+
+
+        public void OnExitClick()
+        {
+            Application.Quit();
         }
     }
 
