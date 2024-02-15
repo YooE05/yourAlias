@@ -117,7 +117,7 @@ namespace yourAlias
 
         public PlayGameConfig GetNewPlayGameConfig()
         {
-            var wordList = new List<string>();
+            var wordList = new List<WordData>();
 
             for (int i = 0; i < crntConfig.collections.Count; i++)
             {

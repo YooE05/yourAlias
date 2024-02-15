@@ -40,7 +40,7 @@ namespace yourAlias
             else
             {
                 isNewCollection = true;
-                collectionList.Add(new Collection(collectionName, new List<string>()));
+                collectionList.Add(new Collection(collectionName, new List<WordData>()));
                 return collectionList.Find(c => c.Name == collectionName);
             }
         }

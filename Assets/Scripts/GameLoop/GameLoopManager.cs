@@ -19,7 +19,7 @@ namespace yourAlias
 
         private int passedTimerTime;
         private bool isTimerPlays;
-        private List<string> crntWordList = new();
+        private List<WordData> crntWordList = new();
         private int decreasePoints;
         private bool isNeedToGuessLastWord;
 
@@ -35,7 +35,7 @@ namespace yourAlias
             {
                 this.passedTimerTime = this.crntGameConfig.timePerRound;
                 this.isTimerPlays = false;
-                this.crntWordList = new List<string>(this.crntGameConfig.words);
+                this.crntWordList = new List<WordData>(this.crntGameConfig.words);
                 this.decreasePoints = 0;
 
 
@@ -68,18 +68,18 @@ namespace yourAlias
             this.gameLoopView.ShowPlayScreen();
 
         }
-        private string GetRandomWord()
+        private WordData GetRandomWord()
         {
             if (this.crntWordList.Count == 0)
             {
                 this.crntWordList.AddRange(this.crntGameConfig.words);
             }
             var ind = Random.Range(0, this.crntWordList.Count);
-            var w = this.crntWordList[ind];
+            var wordData = this.crntWordList[ind];
 
             this.crntWordList.RemoveAt(ind);
 
-            return w;
+            return wordData;
         }
 
         public void OnStartButton()
@@ -119,7 +119,7 @@ namespace yourAlias
 
         private void EndTimerActions()
         {
-            this.gameLoopView.ShowPostRoundScreen(decreasePoints);
+            this.gameLoopView.ShowPostRoundScreen(decreasePoints, crntGameConfig.isSkipWordsUnsafe);
             this.passedTimerTime = this.crntGameConfig.timePerRound;
             this.isTimerPlays = false;
             this.decreasePoints = 0;
@@ -221,14 +221,14 @@ namespace yourAlias
 
     public class PlayGameConfig
     {
-        public PlayGameConfig(SettingsGameConfig settingsConfig, List<string> words)
+        public PlayGameConfig(SettingsGameConfig settingsConfig, List<WordData> words)
         {
             this.roundNumber = 1;
             this.winPoints = settingsConfig.winPoints;
             this.timePerRound = settingsConfig.timePerRound;
             this.isSkipWordsUnsafe = settingsConfig.isSkipWordsUnsafe;
 
-            this.words = new List<string>(words);
+            this.words = new List<WordData>(words);
 
             this.teamsData = new();
             for (int i = 0; i < settingsConfig.teams.Count; i++)
@@ -238,7 +238,7 @@ namespace yourAlias
         }
 
         public List<Team> teamsData;
-        public List<string> words;
+        public List<WordData> words;
         public int winPoints;
         public int timePerRound;
         public bool isSkipWordsUnsafe;

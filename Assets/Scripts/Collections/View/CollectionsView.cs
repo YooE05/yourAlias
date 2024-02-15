@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
@@ -11,7 +10,7 @@ namespace yourAlias
     {
         public Action<string> OnCollectionSettingsClick;
         public Action<string> OnCollectionGameClick;
-        public Action<string> OnWordRemoveClick; //объект в скроле скрывается при удалении
+        public Action<string, string> OnWordRemoveClick; //объект в скроле скрывается при удалении
 
         [Header("Prefs")]
         [SerializeField] GameObject collSettingsViewPref;
@@ -27,6 +26,7 @@ namespace yourAlias
         [Header("Settings UI")]
         [SerializeField] TMP_InputField nameInputField;
         [SerializeField] TMP_InputField wordInputField;
+        [SerializeField] TMP_InputField wordDiscriptionField;
         [SerializeField] GameObject waringSettingsMessage;
         [SerializeField] GameObject waringImportMessage;
 
@@ -88,15 +88,22 @@ namespace yourAlias
         {
             this.nameInputField.text = crntCollection.Name;
 
+            /* foreach (var wordData in crntCollection.WordDictionary)
+             {
+                 AddWordView(wordData.Key, wordData.Value);
+             }
+ */
             for (int i = 0; i < crntCollection.WordList.Count; i++)
             {
-                AddWordView(crntCollection.WordList[i]);
+                AddWordView(crntCollection.WordList[i].WordName, crntCollection.WordList[i].WordDiscription);
             }
         }
         internal void SetUpNewSettingsView()
         {
             this.nameInputField.text = "New Collection";
         }
+
+
         internal void RemoveCollectionViews(string name)
         {
             var delView = this.collSetViews.Find(c => c.GetComponentInChildren<TextMeshProUGUI>().text == name);
@@ -107,13 +114,14 @@ namespace yourAlias
             this.collGameViews.Remove(delView);
             Destroy(delView);
         }
-        public void AddWordView(string wordName)
+        public void AddWordView(string wordName, string wordDiscription)
         {
-            var word = Instantiate(this.collSettingsWordPref, this.wordsContainer);
-            word.GetComponentInChildren<TextMeshProUGUI>().text = wordName;
-            word.GetComponentInChildren<Button>().onClick.AddListener(() => OnWordRemoveClick?.Invoke(wordName));
+            var word = Instantiate(this.collSettingsWordPref, this.wordsContainer).GetComponent<WordInCollectionView>();
+            word.SetName(wordName);
+            word.SetDiscription(wordDiscription);
+            word.GetRemoveButton().onClick.AddListener(() => OnWordRemoveClick?.Invoke(wordName, wordDiscription));
 
-            this.words.Add(word);
+            this.words.Add(word.gameObject);
         }
 
 
@@ -153,6 +161,11 @@ namespace yourAlias
         {
             return this.wordInputField.text;
         }
+        internal string GetInputWordDiscription()
+        {
+            return this.wordDiscriptionField.text;
+        }
+
         internal string GetInputCollName()
         {
             return this.nameInputField.text;

@@ -118,15 +118,16 @@ namespace yourAlias
         public void AddWord()
         {
             var newWord = viewController.GetInputWord();
+            var newWordDiscription = viewController.GetInputWordDiscription();
             //добавить в скрол префаб с новым словом
-            viewController.AddWordView(newWord);
+            viewController.AddWordView(newWord, newWordDiscription);
 
-            crntCollection.AddWord(newWord);
+            crntCollection.AddWord(newWord, newWordDiscription);
 
         }
-        public void RemoveWord(string word)
+        public void RemoveWord(string word, string wordDiscription )
         {
-            crntCollection.RemoveWord(word);
+            crntCollection.RemoveWord(word, wordDiscription);
         }
 
 

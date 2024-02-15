@@ -189,20 +189,24 @@ namespace yourAlias
 
         internal int GetAddedPoints()
         {
-            return Convert.ToInt32(this.addedPointsText.text.Substring(1));
+            int currentPoints = this.addedPointsText.text.IndexOf('+') == 0 ? Convert.ToInt32(this.addedPointsText.text.Substring(1)) : Convert.ToInt32(this.addedPointsText.text);
+
+
+            return currentPoints;
         }
 
-        internal void SetNewWord(string w)
+        internal void SetNewWord(WordData word)
         {
-            this.wordText.text = w;
+            this.wordText.text = word.WordName;
 
-            var wordGO = Instantiate(this.wordGamePrefab, this.postRoundWordsContet);
-            wordGO.GetComponentInChildren<TextMeshProUGUI>().text = w;
+            var wordGO = Instantiate(this.wordGamePrefab, this.postRoundWordsContet).GetComponent<WordInPostRoundView>();
+            wordGO.SetName(word.WordName);
+            wordGO.SetDiscription(word.WordDiscription);
             //задать ивент кнопке
-            wordGO.GetComponentInChildren<Button>().onClick.AddListener(() => OnPostRoundWordClick?.Invoke(wordGO.GetComponentInChildren<Toggle>()));
+            wordGO.GetToggleButton().onClick.AddListener(() => OnPostRoundWordClick?.Invoke(wordGO.GetComponentInChildren<Toggle>()));
 
 
-            this.gameWordsList.Add(wordGO);
+            this.gameWordsList.Add(wordGO.gameObject);
         }
 
         internal void RemoveWordList()
@@ -218,16 +222,37 @@ namespace yourAlias
 
         private void TogglePostRoundWord(Toggle toggle)
         {
-            if (toggle.isOn)
+            int currentPoints = this.addedPointsText.text.IndexOf('+') == 0 ? Convert.ToInt32(this.addedPointsText.text.Substring(1)) : Convert.ToInt32(this.addedPointsText.text);
+
+            if (isSkipWordsUnsafe)
             {
-                //decreese points
-                this.addedPointsText.text = "+" + (Mathf.Clamp(Convert.ToInt32(this.addedPointsText.text.Substring(1)) - 1, 0, 100000));
+                if (toggle.isOn)
+                {
+                    //decreese points
+                    currentPoints -= 2;
+                }
+                else
+                {
+                    //increese points
+                    currentPoints += 2;//(Mathf.Clamp(Convert.ToInt32(this.addedPointsText.text.Substring(1)) + 1, -100000, 100000));
+                }
             }
             else
             {
-                //increese points
-                this.addedPointsText.text = "+" + (Mathf.Clamp(Convert.ToInt32(this.addedPointsText.text.Substring(1)) + 1, 0, 100000));
+                if (toggle.isOn)
+                {
+                    //decreese points
+                    currentPoints = Mathf.Clamp(currentPoints - 1, 0, 100000);
+                }
+                else
+                {
+                    //increese points
+                    currentPoints = currentPoints + 1;
+                }
             }
+
+            this.addedPointsText.text = currentPoints >= 0 ? "+" + currentPoints : "" + currentPoints;
+
             toggle.isOn = !toggle.isOn;
         }
 
@@ -243,6 +268,8 @@ namespace yourAlias
             }
 
         }
+
+        private bool isSkipWordsUnsafe = false;
 
         internal void AddSkippedWord()
         {
@@ -295,7 +322,7 @@ namespace yourAlias
         {
             noWordsWarning.SetActive(true);
         }
-        internal void SetUpPlayScreen(string newWord, int timerSec)
+        internal void SetUpPlayScreen(WordData newWord, int timerSec)
         {
             RemoveWordList();
             SetNewWord(newWord);
@@ -313,12 +340,17 @@ namespace yourAlias
             this.wordButton.SetActive(false);
         }
 
-        internal void ShowPostRoundScreen(int decPoints)
+        internal void ShowPostRoundScreen(int decPoints, bool isSkipWordsUnsafe)
         {
+            this.isSkipWordsUnsafe = isSkipWordsUnsafe;
             int guessedWords = Convert.ToInt32(this.guessedWordsText.text);
             //  int skippedWords = Convert.ToInt32(this.skippedWordsText);
 
-            this.addedPointsText.text = "+" + (Mathf.Clamp(guessedWords - decPoints, 0, 100000));
+            this.addedPointsText.text = "" + (guessedWords - decPoints); //(Mathf.Clamp(guessedWords - decPoints, 0, 100000));
+            if (Convert.ToInt32(this.addedPointsText.text) >= 0)
+            {
+                this.addedPointsText.text = "+" + this.addedPointsText.text;
+            }
 
             this.playScreen.SetActive(false);
             this.postRoundScreen.SetActive(true);

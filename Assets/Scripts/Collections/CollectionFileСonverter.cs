@@ -18,8 +18,7 @@ namespace yourAlias
         {
             CollectionEntity importedCollection;
             importedCollection = JsonUtility.FromJson<CollectionEntity>(jsonCollection);
-            return new Collection(importedCollection.name, new List<string>(importedCollection.wordList));
-
+            return new Collection(importedCollection.name, new List<WordData>(importedCollection.wordList));
         }
 
         public string ConvertCollectionToJson(Collection collection)
@@ -89,7 +88,7 @@ namespace yourAlias
             }
 
             Debug.Log("ddd");
-            OnFileImported?.Invoke(new Collection(importedCollection.name, new List<string>(importedCollection.wordList)));
+            OnFileImported?.Invoke(new Collection(importedCollection.name, new List<WordData>(importedCollection.wordList)));
         }
 
     }
